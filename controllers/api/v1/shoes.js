@@ -14,8 +14,8 @@ const index = (req, res) => {
     });
 };
 const indexID = async (req, res) => {
-    /*let id = req.params.id;
-    let shoe = await Shoe.findById(id);*/ //is not needed because we are not using a database yet.
+    let id = req.params.id;
+    /*let shoe = await Shoe.findById(id);*/ //is not needed because we are not using a database yet.
     res.json({
         status: "success",
         message: "GET shoe by ID",
@@ -29,7 +29,20 @@ const indexID = async (req, res) => {
         ],
     });
 }
+const update = async (req, res) => {
+    let id = req.params.id;
+    /*let shoe = await Shoe.findById(id);*/
+    res.json({
+        status: "success",
+        message: `UPDATE shoe status with ID ${id}`,
+        /*data: [
+            {
+                //update status (in progress, sent, completed, etc.)
+            },
+        ],*/
+    });
+};
         
-
 module.exports.index = index;
 module.exports.indexID = indexID;
+module.exports.update = update;

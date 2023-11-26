@@ -6,6 +6,7 @@ const shoesController = require("../../../controllers/api/v1/shoes");
 //get shoes 
 router.get("/", shoesController.index);
 router.get("/:id", shoesController.indexID);
+router.put("/:id", shoesController.update);
 
 
 module.exports = router;
