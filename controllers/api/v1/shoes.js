@@ -1,48 +1,55 @@
-//const Shoe = require("../../../models/Shoe"); is not needed because we are not using a database yet.
+//const Shoe = require("../../../models/Shoe");
+
+//example of the model -> also in models but cannot use it yet because we are not using a database yet.
+const sampleShoes = [
+    ({ username: 'jokesbokes@gmail.com', shoeSize: '42', color: 'red', status: 'in progress', id: '1' }),
+    ({ username: 'joskevermeulen@gmail.com', shoeSize: '48', color: 'blue', status: 'completed', id: '2' }),
+];
 
 const index = (req, res) => {
     res.json({
-      status: "success",
-      message: "GET shoes",
-      data: [
-        {
-          username: "jokesbokes@gmail.com",
-          shoeSize: "42",
-          color: "red",
-        },
-      ],
-    });
-};
-const indexID = async (req, res) => {
-    let id = req.params.id;
-    /*let shoe = await Shoe.findById(id);*/ //is not needed because we are not using a database yet.
-    res.json({
         status: "success",
-        message: "GET shoe by ID",
+        message: "GET shoes",
         data: [
             {
-                username: "jokesbokes@gmail.com",
-                shoeSize: "42",
-                color: "red",
-                /*when using db, we can use the schema to get the data from the db (model) instead of hardcoding it in the controller*/
+                shoes: sampleShoes,
             },
         ],
     });
-}
-const update = async (req, res) => {
+};
+
+const indexID = (req, res) => {
     let id = req.params.id;
-    /*let shoe = await Shoe.findById(id);*/
+    let shoe = sampleShoes.find((shoe) => shoe.id === id);
+    res.json({
+        status: "success",
+        message: `GET shoe with ID ${id}`,
+        data: [
+            {
+                shoe: shoe,
+            },
+        ],
+    });
+};
+
+//update status of the shoe
+const update = (req, res) => {
+    let id = req.params.id;
+    let shoe = sampleShoes.find((shoe) => shoe.id === id);
+
+    shoe.status = req.body.status;
+
     res.json({
         status: "success",
         message: `UPDATE shoe status with ID ${id}`,
-        /*data: [
+        data: [
             {
-                //update status (in progress, sent, completed, etc.)
+                shoe: shoe,
             },
-        ],*/
+        ],
     });
 };
-        
+
 module.exports.index = index;
 module.exports.indexID = indexID;
 module.exports.update = update;
