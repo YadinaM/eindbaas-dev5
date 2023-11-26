@@ -9,11 +9,27 @@ const index = (req, res) => {
           username: "jokesbokes@gmail.com",
           shoeSize: "42",
           color: "red",
-        
         },
       ],
     });
 };
+const indexID = async (req, res) => {
+    /*let id = req.params.id;
+    let shoe = await Shoe.findById(id);*/ //is not needed because we are not using a database yet.
+    res.json({
+        status: "success",
+        message: "GET shoe by ID",
+        data: [
+            {
+                username: "jokesbokes@gmail.com",
+                shoeSize: "42",
+                color: "red",
+                /*when using db, we can use the schema to get the data from the db (model) instead of hardcoding it in the controller*/
+            },
+        ],
+    });
+}
         
 
 module.exports.index = index;
+module.exports.indexID = indexID;
