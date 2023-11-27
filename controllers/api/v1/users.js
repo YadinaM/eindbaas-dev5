@@ -17,4 +17,19 @@ const index = (req, res) => {
     });
 };
 
+const indexID = (req, res) => {
+    let id = req.params.id;
+    let user = sampleUsers.find((user) => user.id === id);
+    res.json({
+        status: "success",
+        message: `GET user with ID ${id}`,
+        data: [
+            {
+                user: user,
+            },
+        ],
+    });
+};
+
 module.exports.index = index;
+module.exports.indexID = indexID;
