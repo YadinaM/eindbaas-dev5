@@ -78,7 +78,34 @@ const create = (req, res) => {
     });
 }
 
+//delete
+
+const remove = (req, res) => {
+    const id = req.params.id;
+    const index = sampleShoes.findIndex((shoe) => shoe.id === id);
+
+    // Check if the shoe with the given ID exists
+    if (index !== -1) {
+        // Remove the shoe from the sampleShoes array
+        const deletedShoe = sampleShoes.splice(index, 1)[0];
+
+        res.json({
+            status: "success",
+            message: `DELETE shoe with ID ${id}`,
+            data: {
+                shoe: deletedShoe,
+            },
+        });
+    } else {
+        res.status(404).json({
+            status: "error",
+            message: `Shoe with ID ${id} not found`,
+        });
+    }
+};
+
 module.exports.index = index;
 module.exports.indexID = indexID;
 module.exports.update = update;
 module.exports.create = create;
+module.exports.remove = remove;
