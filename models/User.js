@@ -4,7 +4,7 @@ const User = {
       type: String,
       required: true,
     },
-    email: {
+    admin: {
       type: String,
       required: true,
     },
