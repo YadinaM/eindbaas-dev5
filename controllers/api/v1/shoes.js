@@ -56,29 +56,38 @@ const update = (req, res) => {
 };
 
 //post shoe
-const create = (req, res) => {
-    const { username, shoeSize, color, status } = req.body;
 
-    // Create a new shoe object
-    const newShoe = {
-        username: username,
-        shoeSize: shoeSize,
-        color: color,
-        status: status,
-        // Add logic to generate a unique ID, if needed
-        id: (sampleShoes.length + 1).toString(),
-    };
+const create = async (req, res) => {
+    const { name, username, shoeSize, color, status } = req.body;
 
-    // Add the new shoe to the sampleShoes array
-    sampleShoes.push(newShoe);
+    try {
+        // Create a new shoe object using the Mongoose model
+        const newShoe = new Shoe({
+            name,
+            username,
+            shoeSize,
+            color,
+            status,
+        });
 
-    res.json({
-        status: "success",
-        message: "POST a new shoe",
-        data: {
-            shoe: newShoe,
-        },
-    });
+        // Save the new shoe to the database
+        const savedShoe = await newShoe.save();
+
+        res.json({
+            status: "success",
+            message: "POST a new shoe",
+            data: {
+                shoe: savedShoe,
+            },
+        });
+    } catch (error) {
+        console.error(`Error creating shoe: ${error.message}`);
+        res.status(500).json({
+            status: "error",
+            message: "Failed to create a new shoe",
+            error: error.message,
+        });
+    }
 }
 
 //delete
