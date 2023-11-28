@@ -5,16 +5,25 @@ const sampleUsers = [
     ({ username: 'joskevermeulen@gmail.com', admin: 0, password:"ikzegookmaarwat", id: '2' }),
 ];
 
-const index = (req, res) => {
-    res.json({
-        status: "success",
-        message: "GET users",
-        data: [
-            {
-                users: sampleUsers,
+const index = async (req, res) => {
+    try {
+        const users = await User.find();
+
+        res.json({
+            status: "success",
+            message: "GET users",
+            data: {
+                users: users,
             },
-        ],
-    });
+        });
+    } catch (error) {
+        console.error(`Error fetching users: ${error.message}`);
+        res.status(500).json({
+            status: "error",
+            message: "Failed to fetch users",
+            error: error.message,
+        });
+    }
 };
 
 const indexID = (req, res) => {
