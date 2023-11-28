@@ -8,18 +8,25 @@ const sampleShoes = [
     ({ username: 'joskevermeulen@gmail.com', shoeSize: '48', color: 'blue', status: 'completed', id: '2' }),
 ];
 
-const index = (req, res) => {
-    //let shoes = await Shoe.find({})
-    res.json({
+const index = async (req, res) => {
+    try {
+      const shoes = await Shoe.find({});
+      res.json({
         status: "success",
         message: "GET shoes",
         data: [
-            {
-                shoes: sampleShoes,
-                //shoes: shoes,
-            },
+          {
+            shoes: shoes,
+          },
         ],
-    });
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        status: "error",
+        message: "Internal Server Error",
+      });
+    }
 };
 
 const indexID = async(req, res) => {
