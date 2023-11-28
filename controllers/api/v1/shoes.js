@@ -9,20 +9,23 @@ const sampleShoes = [
 ];
 
 const index = (req, res) => {
+    //let shoes = await Shoe.find({})
     res.json({
         status: "success",
         message: "GET shoes",
         data: [
             {
                 shoes: sampleShoes,
+                //shoes: shoes,
             },
         ],
     });
 };
 
-const indexID = (req, res) => {
+const indexID = async(req, res) => {
     let id = req.params.id;
-    let shoe = sampleShoes.find((shoe) => shoe.id === id);
+    let shoe = await Shoe.findById(id);
+    //let shoe = sampleShoes.find((shoe) => shoe.id === id);
     res.json({
         status: "success",
         message: `GET shoe with ID ${id}`,
