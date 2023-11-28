@@ -44,21 +44,37 @@ const indexID = async(req, res) => {
 };
 
 //update status of the shoe
-const update = (req, res) => {
-    let id = req.params.id;
-    let shoe = sampleShoes.find((shoe) => shoe.id === id);
-
-    shoe.status = req.body.status;
-
-    res.json({
+const update = async (req, res) => {
+    try {
+      const id = req.params.id;
+      const shoe = await Shoe.findById(id);
+  
+      if (!shoe) {
+        return res.status(404).json({
+          status: "error",
+          message: `Shoe with ID ${id} not found`,
+        });
+      }
+  
+      shoe.status = req.body.status; //only update the status
+      await shoe.save();
+  
+      res.json({
         status: "success",
-        message: `UPDATE shoe status with ID ${id}`,
+        message: `Updated shoe status with ID ${id}`,
         data: [
-            {
-                shoe: shoe,
-            },
+          {
+            shoe: shoe,
+          },
         ],
-    });
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        status: "error",
+        message: "Internal Server Error",
+      });
+    }
 };
 
 //post shoe
