@@ -114,29 +114,36 @@ const create = async (req, res) => {
 
 //delete
 
-const remove = (req, res) => {
+const remove = async (req, res) => {
     const id = req.params.id;
-    const index = sampleShoes.findIndex((shoe) => shoe.id === id);
 
-    // Check if the shoe with the given ID exists
-    if (index !== -1) {
-        // Remove the shoe from the sampleShoes array
-        const deletedShoe = sampleShoes.splice(index, 1)[0];
+    try {
+        // Find the shoe by ID and remove it from the database
+        const deletedShoe = await Shoe.findByIdAndDelete(id);
 
-        res.json({
-            status: "success",
-            message: `DELETE shoe with ID ${id}`,
-            data: {
-                shoe: deletedShoe,
-            },
-        });
-    } else {
-        res.status(404).json({
+        if (deletedShoe) {
+            res.json({
+                status: "success",
+                message: `DELETE shoe with ID ${id}`,
+                data: {
+                    shoe: deletedShoe,
+                },
+            });
+        } else {
+            res.status(404).json({
+                status: "error",
+                message: `Shoe with ID ${id} not found`,
+            });
+        }
+    } catch (error) {
+        console.error(`Error removing shoe: ${error.message}`);
+        res.status(500).json({
             status: "error",
-            message: `Shoe with ID ${id} not found`,
+            message: `Failed to delete shoe with ID ${id}`,
+            error: error.message,
         });
     }
-};
+}
 
 module.exports.index = index;
 module.exports.indexID = indexID;
