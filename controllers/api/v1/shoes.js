@@ -32,7 +32,6 @@ const index = async (req, res) => {
 const indexID = async(req, res) => {
     let id = req.params.id;
     let shoe = await Shoe.findById(id);
-    //let shoe = sampleShoes.find((shoe) => shoe.id === id);
     res.json({
         status: "success",
         message: `GET shoe with ID ${id}`,
