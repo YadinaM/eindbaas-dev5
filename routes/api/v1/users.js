@@ -6,5 +6,6 @@ const usersController = require("../../../controllers/api/v1/users");
 router.get("/", usersController.index);
 router.get("/:id", usersController.indexID);
 router.post("/", usersController.create);
+router.delete("/:id", usersController.remove);
 
 module.exports = router;

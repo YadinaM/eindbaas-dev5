@@ -60,6 +60,35 @@ const create = async (req, res) => {
     }
 }
 
+const remove = async (req, res) => {
+    try {
+      const id = req.params.id;
+      const user = await User.findByIdAndDelete(id);
+  
+      if (user) {
+        res.json({
+          status: "success",
+          message: `Deleted user with ID ${id}`,
+          data: {
+            user: user,
+          },
+        });
+      } else {
+        res.status(404).json({
+          status: "error",
+          message: `User with ID ${id} not found`,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        status: "error",
+        message: "Internal Server Error",
+      });
+    }
+};
+
 module.exports.index = index;
 module.exports.indexID = indexID;
 module.exports.create = create;
+module.exports.remove = remove;
