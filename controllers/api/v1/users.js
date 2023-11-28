@@ -26,18 +26,35 @@ const index = async (req, res) => {
     }
 };
 
-const indexID = (req, res) => {
+const indexID = async (req, res) => {
     let id = req.params.id;
-    let user = sampleUsers.find((user) => user.id === id);
-    res.json({
-        status: "success",
-        message: `GET user with ID ${id}`,
-        data: [
-            {
-                user: user,
-            },
-        ],
-    });
+
+    try {
+        // Find the user by ID in the database
+        const user = await User.findById(id);
+
+        if (user) {
+            res.json({
+                status: "success",
+                message: `GET user with ID ${id}`,
+                data: {
+                    user: user,
+                },
+            });
+        } else {
+            res.status(404).json({
+                status: "error",
+                message: `User with ID ${id} not found`,
+            });
+        }
+    } catch (error) {
+        console.error(`Error fetching user: ${error.message}`);
+        res.status(500).json({
+            status: "error",
+            message: `Failed to fetch user with ID ${id}`,
+            error: error.message,
+        });
+    }
 };
 
 const create = async (req, res) => {
