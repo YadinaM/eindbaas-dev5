@@ -88,7 +88,36 @@ const remove = async (req, res) => {
     }
 };
 
+//update password of the user, no hashing needed
+const update = async (req, res) => {
+    try {
+      const id = req.params.id;
+      const user = await User.findById(id);
+      user.password = req.body.password; //only update the password
+      await user.save();
+  
+      res.json({
+        status: "success",
+        message: `Updated user password with ID ${id}`,
+        data: [
+          {
+            user: user,
+          },
+        ],
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        status: "error",
+        message: "Internal Server Error",
+      });
+    }
+};
+
+
+
 module.exports.index = index;
 module.exports.indexID = indexID;
 module.exports.create = create;
 module.exports.remove = remove;
+module.exports.update = update;
