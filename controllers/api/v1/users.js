@@ -1,9 +1,10 @@
 const User = require("../../../models/User");
+const bcrypt = require('bcrypt');
 
-const sampleUsers = [
+/*const sampleUsers = [
     ({ username: 'jokesbokes@gmail.com', admin: 1, password: 'ikzegmaarwat',  id: '1' }),
     ({ username: 'joskevermeulen@gmail.com', admin: 0, password:"ikzegookmaarwat", id: '2' }),
-];
+];*/
 
 const index = async (req, res) => {
     try {
@@ -61,10 +62,11 @@ const create = async (req, res) => {
     const { username, admin, password } = req.body;
 
     try {
+        const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({
             username,
             admin,
-            password
+            password: hashedPassword,
         });
 
         const savedUser = await newUser.save();
@@ -118,7 +120,10 @@ const update = async (req, res) => {
     try {
       const id = req.params.id;
       const user = await User.findById(id);
-      user.password = req.body.password; //only update the password
+
+      const newPassword = req.body.newPassword;
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      user.password = hashedPassword;
       await user.save();
 
       res.json({
