@@ -1,5 +1,12 @@
 const User = require("../../../models/User");
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+const secretKey = 'temporary_secret';
+
+const generateToken = (userId) => {
+  return jwt.sign({ userId }, secretKey, { expiresIn: '1h' });
+};
 
 const sampleUsers = [
     ({ username: 'jokesbokes@gmail.com', admin: 1, password: 'ikzegmaarwat',  id: '1' }),
@@ -33,6 +40,7 @@ const indexID = async (req, res) => {
     try {
         // Find the user by ID in the database
         const user = await User.findById(id);
+        const token = generateToken(user._id);
 
         if (user) {
             res.json({
@@ -40,6 +48,7 @@ const indexID = async (req, res) => {
                 message: `GET user with ID ${id}`,
                 data: {
                     user: user,
+                    token: token,
                 },
             });
         } else {
@@ -73,12 +82,14 @@ const create = async (req, res) => {
         });
 
         const savedUser = await newUser.save();
+        const token = generateToken(savedUser._id);
 
         res.json({
             status: "success",
             message: "POST a new user",
             data: {
                 user: savedUser,
+                token: token,
             },
         });
     } catch (error) {
