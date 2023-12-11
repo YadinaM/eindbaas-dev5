@@ -1,18 +1,13 @@
-module.exports.go = (server) => {
-    const Primus = require("primus");
-    //const primus = new Primus(server);
-
-    const primus = new Primus(server, {
-        transformer : 'websockets',
-        path: '/primus',
-    });
-  
-    //check if connection, then console.log it
+module.exports.go = (primus) => {
     primus.on("connection", (spark) => {
-        console.log("connection alive");
-        spark.on("data", (data) => {
-            console.log(data);
-            primus.write(data);
-        });
+      console.log("WebSocket connected");
+  
+      spark.on("data", (data) => {
+        // Handle data from the client
+        console.log("Received data from client:", data);
+        // Send data back to the client
+        primus.write(data);
+      });
     });
-};
+  };
+  
