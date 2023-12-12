@@ -1,6 +1,7 @@
 const User = require("../../../models/User");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { MongoGridFSChunkError } = require("mongodb");
 
 const secretKey = 'temporary_secret';
 
@@ -165,8 +166,51 @@ const update = async (req, res) => {
     }
 };
 
+const login = async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = await User.findOne({ username });
+
+    if (user) {
+      const passwordMatch = await bcrypt.compare(password, user.password);
+
+      if (passwordMatch) {
+        const token = generateToken(user._id);
+
+        res.json({
+          status: "success",
+          message: "Login successful",
+          data: {
+            user,
+            token,
+          },
+        });
+      } else {
+        res.status(401).json({
+          status: "error",
+          message: "Invalid password",
+        });
+      }
+    } else {
+      res.status(404).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+  } catch (error) {
+    console.error(`Error during login: ${error.message}`);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+}
+
 module.exports.index = index;
 module.exports.indexID = indexID;
 module.exports.create = create;
 module.exports.remove = remove;
 module.exports.update = update;
+module.exports.login = login;
