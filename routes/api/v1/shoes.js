@@ -9,5 +9,6 @@ router.get("/:id", shoesController.indexID);
 router.put("/:id", shoesController.update);
 router.post("/", shoesController.create);
 router.delete("/:id", shoesController.remove);
+router.patch('/:id/status', shoesController.editStatus);
 
 module.exports = router;

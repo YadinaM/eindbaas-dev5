@@ -149,8 +149,45 @@ const remove = async (req, res) => {
     }
 }
 
+const editStatus = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const newStatus = req.body.status;
+
+    // Use findById to find the shoe by ID
+    const shoe = await Shoe.findById(orderId);
+
+    if (shoe) {
+      // Update the status in the Shoe model
+      shoe.status = newStatus;
+      await shoe.save();
+
+      res.json({
+        status: 'success',
+        message: `Updated status for order with ID ${orderId}`,
+        data: {
+          shoe,
+        },
+      });
+    } else {
+      res.status(404).json({
+        status: 'error',
+        message: `Order with ID ${orderId} not found`,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal Server Error',
+    });
+  }
+};
+
+
 module.exports.index = index;
 module.exports.indexID = indexID;
 module.exports.update = update;
 module.exports.create = create;
 module.exports.remove = remove;
+module.exports.editStatus = editStatus;
