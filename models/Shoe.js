@@ -5,11 +5,11 @@ const ShoeSchema = new Schema ( {
     /*name: {
         type: String,
         required: true,
-    },
+    },*/
     username: {
       type: String,
       required: true,
-    },*/
+    },
     shoeSize: {
       type: String,
       required: true,

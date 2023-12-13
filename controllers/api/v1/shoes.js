@@ -80,13 +80,13 @@ const update = async (req, res) => {
 //post shoe
 
 const create = async (req, res) => {
-    const { /*name, username,*/ shoeSize, colorLaces, colorSole, colorOutside, status, quantity, date} = req.body;
+    const { /*name,*/ username, shoeSize, colorLaces, colorSole, colorOutside, status, quantity, date} = req.body;
 
     try {
         // Create a new shoe object using the Mongoose model
         const newShoe = new Shoe({
-            /*name,
-            username,*/
+            /*name,*/
+            username,
             shoeSize,
             colorLaces,
             colorSole,
