@@ -182,7 +182,8 @@ const login = async (req, res) => {
           status: "success",
           message: "Login successful",
           data: {
-            user,
+            username,
+            admin: user.admin, // Include the admin field in the response
             token,
           },
         });
