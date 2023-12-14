@@ -5,8 +5,8 @@ const { MongoGridFSChunkError } = require("mongodb");
 
 const secretKey = 'temporary_secret';
 
-const generateToken = (userId) => {
-  return jwt.sign({ userId }, secretKey, { expiresIn: '1h' });
+const generateToken = (userId, admin) => {
+  return jwt.sign({ userId, admin }, secretKey, { expiresIn: '1h' }); //nieuw
 };
 
 const sampleUsers = [
@@ -176,7 +176,7 @@ const login = async (req, res) => {
       const passwordMatch = await bcrypt.compare(password, user.password);
 
       if (passwordMatch) {
-        const token = generateToken(user._id);
+        const token = generateToken(user._id, user.admin); //nieuw
 
         res.json({
           status: "success",
