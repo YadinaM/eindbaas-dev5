@@ -2,11 +2,12 @@ const User = require("../../../models/User");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { MongoGridFSChunkError } = require("mongodb");
+require('dotenv').config();
 
-const secretKey = 'temporary_secret';
+const secretKey = process.env.JWT_SECRET;
 
-const generateToken = (userId) => {
-  return jwt.sign({ userId }, secretKey, { expiresIn: '1h' });
+const generateToken = (userId, admin) => {
+  return jwt.sign({ userId, admin }, secretKey, { expiresIn: '1h' });
 };
 
 const sampleUsers = [
@@ -176,8 +177,8 @@ const login = async (req, res) => {
       const passwordMatch = await bcrypt.compare(password, user.password);
 
       if (passwordMatch) {
-        const token = generateToken(user._id);
-
+        const token = generateToken(user._id, user.admin);
+        console.log('Generated Token:', token);
         res.json({
           status: "success",
           message: "Login successful",
