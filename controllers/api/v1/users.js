@@ -184,6 +184,7 @@ const login = async (req, res) => {
           data: {
             user,
             token,
+            admin: user.admin,
           },
         });
       } else {
