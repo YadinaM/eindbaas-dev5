@@ -133,39 +133,54 @@ const remove = async (req, res) => {
 };
 
 const update = async (req, res) => {
-    try {
-      const id = req.params.id;
-      const user = await User.findById(id);
+  const id = req.params.id;
 
-      const newPassword = req.body.password;
-      if (typeof newPassword !== 'string') {
-        throw new Error('Invalid password format');
-      }
+  let { currentPassword, newPassword } = req.body;
 
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({
+      status: "error",
+      message: "Please provide both current and new password",
+    });
+  }
 
-      user.password = hashedPassword; // Update the hashed password
-      await user.save();
-      /*user.password = req.body.password; //only update the password
-      await user.save();*/
+  try {
+    const user = await User.findById(id);
 
-      res.json({
-        status: "success",
-        message: `Updated user password with ID ${id}`,
-        data: [
-          {
-            user: user,
-          },
-        ],
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({
+    if (!user) {
+      return res.status(404).json({
         status: "error",
-        message: "Internal Server Error",
+        message: `User with ID ${id} not found`,
       });
     }
+
+    const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+
+    if (!passwordMatch) {
+      return res.status(401).json({
+        status: "error",
+        message: "Invalid current password",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.json({
+      status: "success",
+      message: `Updated user password with ID ${id}`,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
 };
+
+
 
 const login = async (req, res) => {
   const { username, password } = req.body;
