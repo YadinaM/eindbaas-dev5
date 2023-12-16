@@ -137,17 +137,39 @@ const update = async (req, res) => {
       const id = req.params.id;
       const user = await User.findById(id);
 
-      const newPassword = req.body.password;
+      const currentPassword = req.body.currentPassword;
+      const newPassword = req.body.newPassword;
+
+      if (!currentPassword || newPassword === undefined || newPassword === '') {
+      return res.status(400).json({
+        status: "error",
+        message: "Please provide a current password and a new password",
+      });
+      }
+
+      /*if(!currentPassword || !newPassword) {
+        res.status(400).json({
+          status: "error",
+          message: "Please provide a current password and a new password",
+      });
+      }
+
       if (typeof newPassword !== 'string') {
         throw new Error('Invalid password format');
+      }*/
+
+      const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!passwordMatch) {
+        res.status(401).json({
+          status: "error",
+          message: "Invalid password",
+      });
       }
 
       const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-      user.password = hashedPassword; // Update the hashed password
-      await user.save();
-      /*user.password = req.body.password; //only update the password
-      await user.save();*/
+      //update user password
+      await User.findByIdAndUpdate(id, { password: hashedPassword });
 
       res.json({
         status: "success",
