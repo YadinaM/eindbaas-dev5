@@ -160,7 +160,7 @@ const update = async (req, res) => {
 
       const passwordMatch = await bcrypt.compare(currentPassword, user.password);
       if (!passwordMatch) {
-        res.status(401).json({
+        return res.status(401).json({
           status: "error",
           message: "Invalid password",
       });
@@ -182,7 +182,7 @@ const update = async (req, res) => {
       });
     } catch (error) {
       console.error(error);
-      res.status(500).json({
+      return res.status(500).json({
         status: "error",
         message: "Internal Server Error",
       });
