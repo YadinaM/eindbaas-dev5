@@ -4,12 +4,13 @@ const Primus = require("primus");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
+const port = 3000;
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-const port = process.env.PORT || 3000;
+//const port = process.env.PORT || 3000;
 
 mongoose.connect(process.env.MONGODB);
 console.log(process.env.MONGODB);
