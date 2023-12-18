@@ -4,9 +4,18 @@ const jwt = require('jsonwebtoken');
 const { MongoGridFSChunkError } = require("mongodb");
 require('dotenv').config();
 
-const secretKey = process.env.JWT_SECRET;
+/*const secretKey = process.env.JWT_SECRET;
 
 const generateToken = (userId, admin) => {
+  return jwt.sign({ userId, admin }, secretKey, { expiresIn: '1h' });
+};*/
+const generateToken = (userId, admin) => {
+  const secretKey = process.env.JWT_SECRET;
+
+  if (!secretKey) {
+    throw new Error('JWT_SECRET is not defined in the environment variables.');
+  }
+
   return jwt.sign({ userId, admin }, secretKey, { expiresIn: '1h' });
 };
 
